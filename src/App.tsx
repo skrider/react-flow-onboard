@@ -2,10 +2,13 @@ import './App.css';
 import { Box } from '@chakra-ui/react';
 import ReactFlow, { Handle, Position, useNodesState, useEdgesState, addEdge, Background, BackgroundVariant } from 'reactflow';
 import { useCallback, useMemo } from 'react';
+import 'reactflow/dist/style.css';
 
 const initialNodes = [
     { id: '1', position: { x: 0, y: 0 }, data: { label: '1' }, },
-    { id: '2', position: { x: 0, y: 100 }, data: { label: '2' }, type: 'textUpdater', },
+    { id: '2', position: { x: 100, y: 0 }, data: { label: '1' }, },
+    { id: '3', position: { x: 200, y: 0 }, data: { label: '1' }, },
+    { id: '4', position: { x: 300, y: 0 }, data: { label: '1' }, type: 'textUpdater', },
 ];
 
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
@@ -43,6 +46,11 @@ function App() {
 
     const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
 
+    const onConnect = useCallback(
+        (params) => setEdges((eds) => addEdge(params, eds)),
+        [setEdges],
+    );
+
     return (
         <div className="App">
             <Box
@@ -52,6 +60,9 @@ function App() {
                 <ReactFlow
                     nodes={nodes}
                     nodeTypes={nodeTypes}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onConnect={onConnect}
                     edges={edges}>
                     <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
                 </ReactFlow>
